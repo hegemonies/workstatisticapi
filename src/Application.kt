@@ -1,20 +1,38 @@
 package org.bravo
 
-import io.ktor.application.*
-import io.ktor.response.*
-import io.ktor.request.*
-import io.ktor.features.*
-import io.ktor.routing.*
-import io.ktor.http.*
-import io.ktor.auth.*
-import com.fasterxml.jackson.databind.*
-import io.ktor.jackson.*
+import com.fasterxml.jackson.databind.SerializationFeature
+import io.ktor.application.Application
+import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.auth.Authentication
+import io.ktor.features.CORS
+import io.ktor.features.ContentNegotiation
+import io.ktor.features.DefaultHeaders
+import io.ktor.features.StatusPages
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
+import io.ktor.jackson.jackson
+import io.ktor.response.respond
+import io.ktor.response.respondText
+import io.ktor.routing.get
+import io.ktor.routing.routing
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
+    // install(DropwizardMetrics) {
+    //     val reporter = Slf4jReporter.forRegistry(registry)
+    //         .outputTo(log)
+    //         .convertRatesTo(TimeUnit.SECONDS)
+    //         .convertDurationsTo(TimeUnit.MILLISECONDS)
+    //         .build();
+    //     reporter.start(10, TimeUnit.SECONDS);
+    // }
+
     install(CORS) {
         method(HttpMethod.Options)
         method(HttpMethod.Put)
@@ -46,10 +64,10 @@ fun Application.module(testing: Boolean = false) {
 
         install(StatusPages) {
             exception<AuthenticationException> { cause ->
-                call.respond(HttpStatusCode.Unauthorized)
+                call.respond(HttpStatusCode.Unauthorized, cause.message ?: "")
             }
             exception<AuthorizationException> { cause ->
-                call.respond(HttpStatusCode.Forbidden)
+                call.respond(HttpStatusCode.Forbidden, cause.message ?: "")
             }
 
         }
@@ -62,4 +80,3 @@ fun Application.module(testing: Boolean = false) {
 
 class AuthenticationException : RuntimeException()
 class AuthorizationException : RuntimeException()
-
