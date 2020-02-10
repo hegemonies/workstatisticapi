@@ -1,4 +1,4 @@
-package org.bravo.model
+package org.bravo.model.db
 
 import org.jetbrains.exposed.dao.LongIdTable
 
