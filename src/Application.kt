@@ -65,26 +65,20 @@ fun Application.module(testing: Boolean = false) {
         }
     }
 
-    routing {
-        get("/") {
-            call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
-        }
+    install(Routing) {
+        users()
+        statistic()
+    }
 
-        install(StatusPages) {
-            exception<AuthenticationException> { cause ->
-                call.respond(HttpStatusCode.Unauthorized, cause.message ?: "")
-            }
-            exception<AuthorizationException> { cause ->
-                call.respond(HttpStatusCode.Forbidden, cause.message ?: "")
-            }
-            exception<Exception> { cause ->
-                call.respond(HttpStatusCode.InternalServerError, cause.message ?: "")
-            }
+    install(StatusPages) {
+        exception<AuthenticationException> { cause ->
+            call.respond(HttpStatusCode.Unauthorized, cause.message ?: "")
         }
-
-        install(Routing) {
-            users()
-            statistic()
+        exception<AuthorizationException> { cause ->
+            call.respond(HttpStatusCode.Forbidden, cause.message ?: "")
+        }
+        exception<Exception> { cause ->
+            call.respond(HttpStatusCode.InternalServerError, cause.message ?: "")
         }
     }
 }
