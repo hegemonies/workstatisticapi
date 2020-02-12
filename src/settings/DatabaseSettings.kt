@@ -1,7 +1,7 @@
 package org.bravo.settings
 
-import org.bravo.model.db.Statistic
-import org.bravo.model.db.Users
+import org.bravo.model.Statistic
+import org.bravo.model.Users
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.StdOutSqlLogger
